@@ -73,7 +73,7 @@ console.log(dateFuture)
   - Exiba no console a quantidade de dias entre o momento futuro e o passado.
 */
 
-const diffDays = dateFuture - birthday
+const diffDays = dateFuture.getTime() - birthday.getTime()
 const secs = Math.round(diffDays/1000);
 const mins = Math.round(secs/60)
 const hours = Math.round(mins/60)

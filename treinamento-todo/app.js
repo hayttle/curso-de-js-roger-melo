@@ -1,7 +1,6 @@
 const formAddTodo = document.querySelector(".form-add-todo");
 const inputSearchToDo = document.querySelector(".form-search input");
 const ulContainer = document.querySelector(".todos-container");
-const todosContainer = document.querySelector(".todos-container");
 
 const addToDo = (inputValue) => {
   if (inputValue.length) {

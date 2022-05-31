@@ -4,17 +4,19 @@
   - Implemente um código assíncrono entre os console.log() abaixo.
 */
 
-console.log('Linha 1')
-console.log('Linha 2')
-console.log('Linha 3')
-console.log('Linha 4')
+console.log("Linha 1");
+console.log("Linha 2");
+console.log("Linha 3");
+console.log("Linha 4");
 
+setTimeout(() => {
+  console.log("Função de callback sendo exibida!");
+}, 1000);
 
-
-console.log('Linha 5')
-console.log('Linha 6')
-console.log('Linha 7')
-console.log('Linha 8')
+console.log("Linha 5");
+console.log("Linha 6");
+console.log("Linha 7");
+console.log("Linha 8");
 
 /*
   02
@@ -23,11 +25,15 @@ console.log('Linha 8')
     "logGreeting" ser exibida no console.
 */
 
-function logGreeting (name) {
-  console.log(`olá, ${name}`)
+const x = (callback) => {
+  callback("Hayttle");
+};
+
+function logGreeting(name) {
+  console.log(`olá, ${name}`);
 }
 
-// x(logGreeting)
+x(logGreeting);
 
 /*
   03
@@ -35,10 +41,12 @@ function logGreeting (name) {
   - O código abaixo possui uma parte que pode ser isolada. Isole-a.
 */
 
-const numbers = [3, 4, 10, 20]
-const lesserThanFive = numbers.filter(num => num < 5)
+const filteredNumber = (array) => array.filter((num) => num < 5);
 
-console.log(lesserThanFive)
+const numbers = [3, 4, 10, 20];
+const lesserThanFive = filteredNumber(numbers);
+
+console.log(lesserThanFive);
 
 /*
   04
@@ -46,14 +54,16 @@ console.log(lesserThanFive)
   - Refatore o código abaixo.
 */
 
-const prices = [12, 19, 7, 209]
-let totalPrice = 0
+const prices = [12, 19, 7, 209];
+// let totalPrice = 0;
 
-for (let i = 0; i < prices.length; i++) {
-  totalPrice += prices[i]
-}
+const total = (array) => array.reduce((acc, item) => acc + item, 0);
 
-console.log(`Preço total: ${totalPrice}`)
+// for (let i = 0; i < prices.length; i++) {
+//   totalPrice += prices[i];
+// }
+
+console.log(`Preço total: ${total(prices)}`);
 
 /*
   05
@@ -62,7 +72,9 @@ console.log(`Preço total: ${totalPrice}`)
   - Não insira `car.color = azul`.
 */
 
-let car = { color: 'amarelo' }
+let car = {color: "amarelo"};
+
+console.log((car["color"] = "azul"));
 
 /*
   06
@@ -73,6 +85,13 @@ let car = { color: 'amarelo' }
   - Se todos os argumentos forem passados, retorne a string 'A função foi 
     invocada com 3 argumentos'.
 */
+
+// const myFunc = (arg1 = null, arg2 = null, arg3 = null) => {
+//   const array = [arg1, arg2, arg3];
+//   return array.length < 3 ? `A função deve ser invocada com 3 argumentos` : `A função foi invocada com 3 argumentos`;
+// };
+
+// console.log(myFunc("argumento1", "argumento2"));
 
 /*
   07
@@ -98,5 +117,5 @@ let car = { color: 'amarelo' }
 
 let booksBox = {
   spaces: 5,
-  booksIn: 0
-}
+  booksIn: 0,
+};

@@ -6,6 +6,20 @@
   - Não utilize a date-fns.
 */
 
+const formatNumber = (number) => (number < 10 ? `0${number}` : number);
+
+const date = new Date();
+
+const getDate1 = (date) => {
+  const day = formatNumber(date.getDate());
+  // const month = date.toLocaleString("pt-BR", {month: "long"});
+  const month = formatNumber(date.getMonth() + 1);
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+console.log(getDate1(date));
+
 /*
   02
 
@@ -13,6 +27,19 @@
     data na formatação: "03:07 - domingo, 7 de junho de 2020";
   - Não utilize a date-fns.
 */
+
+const getDate2 = (date) => {
+  const hours = formatNumber(date.getHours());
+  const minutes = formatNumber(date.getMinutes());
+  const dayOfWeek = date.toLocaleString("pt-BR", {weekday: "long"});
+  const day = date.getDate();
+  const month = date.toLocaleString("pt-BR", {month: "long"});
+  const year = date.getFullYear();
+
+  return `${hours}:${minutes} - ${dayOfWeek}, ${day} de ${month} de ${year}`;
+};
+
+console.log(getDate2(date));
 
 /*
   03
@@ -22,7 +49,10 @@
   - Não modifique a declaração da const user.
 */
 
-const user = { id: 42, isVerified: true }
+const user = {id: 42, isVerified: true};
+
+const {id, isVerified} = user;
+console.log(id, isVerified);
 
 /*
   04
@@ -34,8 +64,13 @@ const user = { id: 42, isVerified: true }
   - Não modifique a declaração das consts "robotA" e "robotB".
 */
 
-const robotA = { name: 'Bender' }
-const robotB = { name: 'HAL 9000' }
+const robotA = {name: "Bender"};
+const robotB = {name: "HAL 9000"};
+
+const {name: nameA} = robotA;
+const {name: nameB} = robotB;
+
+console.log(nameA, nameB);
 
 /*
   05
@@ -46,9 +81,13 @@ const robotB = { name: 'HAL 9000' }
   - Exiba o objeto no console.
 */
 
-const a = 'a'
-const b = 'b'
-const c = 'c'
+const a = "a";
+const b = "b";
+const c = "c";
+
+const obj = {a, b, c};
+
+console.log(obj);
 
 /*
   06
@@ -56,27 +95,19 @@ const c = 'c'
   - Refatore o código abaixo.
 */
 
-const useDataSomewhereElse = value => {
-  console.log(value)
-}
+const useDataSomewhereElse = (value) => {
+  console.log(value);
+};
 
-const updateSomething = (data = {}) => {
-  const target = data.target
-  const property = data.property
-  let willChange = data.willChange
-
-  if (willChange === 'valor indesejado') {
-    willChange = 'valor desejado'
+const updateSomething = ({target, property, willChange} = {}) => {
+  if (willChange === "valor indesejado") {
+    willChange = "valor desejado";
   }
 
-  useDataSomewhereElse({
-    target: target,
-    property: property,
-    willChange: willChange
-  })
-}
+  useDataSomewhereElse({target, property, willChange});
+};
 
-updateSomething({ target: '1', property: '2', willChange: 'valor indesejado' })
+updateSomething({target: "1", property: "2", willChange: "valor indesejado"});
 
 /*
   07
@@ -85,21 +116,25 @@ updateSomething({ target: '1', property: '2', willChange: 'valor indesejado' })
     passada. Refatore-o.
 */
 
-const clockContainer = document.querySelector('.clock-container')
+const clockContainer = document.querySelector(".clock-container");
+
+const insertTimeIntoDOM = (hours, minutes, seconds) => {
+  const clockHTML = `
+    <span>${hours}</span> :
+    <span>${minutes}</span> :
+    <span>${seconds}</span>
+  `;
+
+  clockContainer.innerHTML = clockHTML;
+};
 
 const updateClock = () => {
-  const present = new Date()
-  const hours = present.getHours()
-  const minutes = present.getMinutes()
-  const seconds = present.getSeconds()
+  const present = new Date();
+  const hours = formatNumber(present.getHours());
+  const minutes = formatNumber(present.getMinutes());
+  const seconds = formatNumber(present.getSeconds());
 
-  const clockHTML = `
-    <span>${String(hours).length === 1 ? `0${hours}` : hours}</span> :
-    <span>${String(minutes).length === 1 ? `0${minutes}` : minutes}</span> :
-    <span>${String(seconds).length === 1 ? `0${seconds}` : seconds}</span>
-  `
+  insertTimeIntoDOM(hours, minutes, seconds);
+};
 
-  clockContainer.innerHTML = clockHTML
-}
-
-setInterval(updateClock, 1000)
+setInterval(updateClock, 1000);

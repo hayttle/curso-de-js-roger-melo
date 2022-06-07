@@ -4,19 +4,19 @@
   - Implemente um código assíncrono entre os console.log() abaixo.
 */
 
-console.log("Linha 1");
-console.log("Linha 2");
-console.log("Linha 3");
-console.log("Linha 4");
+// console.log("Linha 1");
+// console.log("Linha 2");
+// console.log("Linha 3");
+// console.log("Linha 4");
 
 setTimeout(() => {
   console.log("Função de callback sendo exibida!");
 }, 1000);
 
-console.log("Linha 5");
-console.log("Linha 6");
-console.log("Linha 7");
-console.log("Linha 8");
+// console.log("Linha 5");
+// console.log("Linha 6");
+// console.log("Linha 7");
+// console.log("Linha 8");
 
 /*
   02
@@ -124,26 +124,34 @@ let booksBox = {
   booksIn: 0,
 };
 
-//TODO: refatorar
+const getSingularOrPlural = (quantity, singular, plural) =>
+quantity === 1 ? singular : plural;
 
-const addBook = (amount) => {
-  if (booksBox.booksIn === booksBox.spaces) {
-    console.log("A caixa já está cheia");
-    return;
-  }
-  if (booksBox.spaces - booksBox.booksIn === 1) {
-    console.log(`Só cabe mais ${booksBox.spaces - booksBox.booksIn} livro`);
-    return;
-  }
-  if (amount > booksBox.spaces - booksBox.booksIn) {
-    console.log(`Só cabem mais ${booksBox.spaces - booksBox.booksIn} livros`);
-    return;
+getAvailableSpacesMessage = (spaces,booksIn) => {
+  const availableSpace = spaces - booksIn;
+  const fitSingularOrPlural = getSingularOrPlural(availableSpace, "cabe", "cabem");
+  const bookSingularOrPlural = getSingularOrPlural(availableSpace, "livro", "livros");
+  return `Só ${fitSingularOrPlural} mais ${availableSpace} ${bookSingularOrPlural}`;
+}
+
+booksBox.addBook = (quantity) => {
+  let {spaces} = booksBox
+  const isBoxFilled = booksBox.booksIn === spaces;
+  const boxSpacesAreNotEnough = booksBox.booksIn + quantity > spaces;
+  
+  if (isBoxFilled) {
+    return "A caixa já está cheia"
   }
 
-  booksBox.booksIn += amount;
-  console.log(`Já há ${booksBox.booksIn} livros na caixa`);
+  if (boxSpacesAreNotEnough) {
+    return getAvailableSpacesMessage(spaces, booksBox.booksIn)
+  }
+
+  booksBox.booksIn += quantity;
+  const bookSingularOrPlural = getSingularOrPlural(booksBox.booksIn, "livro", "livros");
+  return `Já há ${booksBox.booksIn} ${bookSingularOrPlural} na caixa`;
 };
 
-addBook(1);
-addBook(3);
-addBook(4);
+console.log(booksBox.addBook(1));
+console.log(booksBox.addBook(2));
+console.log(booksBox.addBook(5));

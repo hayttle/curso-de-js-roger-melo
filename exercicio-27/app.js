@@ -72,9 +72,10 @@ console.log(`Preço total: ${total(prices)}`);
   - Não insira `car.color = azul`.
 */
 
-let car = {color: "amarelo"};
-
-console.log((car["color"] = "azul"));
+let car = { color: "amarelo" };
+let secondCar = car;
+secondCar.color = "azul";
+console.log(car.color, secondCar.color);
 
 /*
   06
@@ -86,12 +87,15 @@ console.log((car["color"] = "azul"));
     invocada com 3 argumentos'.
 */
 
-// const myFunc = (arg1 = null, arg2 = null, arg3 = null) => {
-//   const array = [arg1, arg2, arg3];
-//   return array.length < 3 ? `A função deve ser invocada com 3 argumentos` : `A função foi invocada com 3 argumentos`;
-// };
+const myFunc = (arg1, arg2, arg3) => {
+  const isSomeUndefined = [arg1, arg2, arg3].includes(undefined);
 
-// console.log(myFunc("argumento1", "argumento2"));
+  return isSomeUndefined
+    ? `A função deve ser invocada com 3 argumentos`
+    : `A função foi invocada com 3 argumentos`;
+};
+
+console.log(myFunc(() => {}, {}, []));
 
 /*
   07
@@ -119,3 +123,27 @@ let booksBox = {
   spaces: 5,
   booksIn: 0,
 };
+
+//TODO: refatorar
+
+const addBook = (amount) => {
+  if (booksBox.booksIn === booksBox.spaces) {
+    console.log("A caixa já está cheia");
+    return;
+  }
+  if (booksBox.spaces - booksBox.booksIn === 1) {
+    console.log(`Só cabe mais ${booksBox.spaces - booksBox.booksIn} livro`);
+    return;
+  }
+  if (amount > booksBox.spaces - booksBox.booksIn) {
+    console.log(`Só cabem mais ${booksBox.spaces - booksBox.booksIn} livros`);
+    return;
+  }
+
+  booksBox.booksIn += amount;
+  console.log(`Já há ${booksBox.booksIn} livros na caixa`);
+};
+
+addBook(1);
+addBook(3);
+addBook(4);

@@ -13,6 +13,42 @@
       executado quando o request anterior for finalizado.
 */
 
+const getPokemon = (url, callback) => {
+  const request = new XMLHttpRequest();
+
+  request.addEventListener("readystatechange", () => {
+    const isRequestOK = request.readyState === 4 && request.status === 200;
+    const isRequestNotOK = request.readyState === 4;
+
+    if (isRequestOK) {
+      const data = JSON.parse(request.responseText);
+      callback(null, data);
+      return;
+    }
+    if (isRequestNotOK) {
+      callback("Não foi possível obter o Pokémon", null);
+    }
+  });
+
+  request.open("GET", url);
+  request.send();
+};
+
+const logPokemonData = (error, data) =>
+  error ? console.log(error) : console.log(`Pokémon obtido: ${data.name}`);
+
+const getPokemonUrl = (name) => `https://pokeapi.co/api/v2/pokemon/${name}`;
+
+getPokemon(getPokemonUrl("bulbasaur"), (error, data) => {
+  logPokemonData(error, data);
+  getPokemon(getPokemonUrl("charmander"), (error, data) => {
+    logPokemonData(error, data);
+    getPokemon(getPokemonUrl("squirtle"), (error, data) => {
+      logPokemonData(error, data);
+    });
+  });
+});
+
 /*
   02
 
@@ -32,6 +68,15 @@
     2) Pesquisar no MDN.
 */
 
+const map = (array, callback) => {
+  let newArray = [];
+  array.forEach((item) => newArray.push(callback(item)));
+  return newArray;
+};
+
+console.log(map([1, 2, 3], (number) => number * 2));
+console.log(map([1, 2, 3], (number) => number * 3));
+
 /*
   03
 
@@ -40,11 +85,11 @@
 */
 
 const person = {
-  name: 'Roger',
-  getName: () => this.name
-}
+  name: "Roger",
+  getName: () => person.name,
+};
 
-// console.log(person.getName())
+console.log(person.getName());
 
 /*
   04
@@ -55,8 +100,11 @@ const person = {
     delas.
 */
 
-const x = 'x'
-// const x = 'y'
+const x = "x";
+const getX = () => {
+  const x = "y";
+  return x;
+};
 
 /*
   05
@@ -65,14 +113,9 @@ const x = 'x'
     conseguir.
 */
 
-const getFullName = (user) => {
-  const firstName = user.firstName
-  const lastName = user.lastName
+const getFullName = ({ firstName, lastName }) => `${firstName} ${lastName}`;
 
-  return `${firstName} ${lastName}`
-}
-
-console.log(getFullName({ firstName: 'Afonso', lastName: 'Solano' }))
+console.log(getFullName({ firstName: "Afonso", lastName: "Solano" }));
 
 /*
   06
@@ -88,6 +131,29 @@ console.log(getFullName({ firstName: 'Afonso', lastName: 'Solano' }))
   - Exiba o hexadecimal de 8 cores diferentes usando a função criada acima.
 */
 
+const convertToHex = (color) => {
+  const colors = {
+    red: "#ff0000",
+    green: "#00ff00",
+    blue: "#0000ff",
+  };
+  return colors[color]
+    ? `O hexadecimal para a cor ${color} é ${colors[color]}`
+    : `Não temos o equivalente hexadecimal para ${color}`;
+};
+
+const colors = [
+  "red",
+  "green",
+  "blue",
+  "purple",
+  "white",
+  "black",
+  "yellow",
+  "gray",
+];
+
+colors.forEach((color) => console.log(convertToHex(color)));
 
 /*
   07
@@ -105,10 +171,10 @@ console.log(getFullName({ firstName: 'Afonso', lastName: 'Solano' }))
 */
 
 const people = [
-  { id: 5 , name: 'Angelica', age: 18, federativeUnit: 'Pernambuco' },
-  { id: 81, name: 'Thales', age: 19, federativeUnit: 'São Paulo' },
-  { id: 47, name: 'Ana Carolina', age: 18, federativeUnit: 'Alagoas' },
-  { id: 87, name: 'Felipe', age: 18, federativeUnit: 'Minas Gerais' },
-  { id: 9 , name: 'Gabriel', age: 20, federativeUnit: 'São Paulo' },
-  { id: 73, name: 'Aline', age: 19, federativeUnit: 'Brasília' }
-]
+  { id: 5, name: "Angelica", age: 18, federativeUnit: "Pernambuco" },
+  { id: 81, name: "Thales", age: 19, federativeUnit: "São Paulo" },
+  { id: 47, name: "Ana Carolina", age: 18, federativeUnit: "Alagoas" },
+  { id: 87, name: "Felipe", age: 18, federativeUnit: "Minas Gerais" },
+  { id: 9, name: "Gabriel", age: 20, federativeUnit: "São Paulo" },
+  { id: 73, name: "Aline", age: 19, federativeUnit: "Brasília" },
+];

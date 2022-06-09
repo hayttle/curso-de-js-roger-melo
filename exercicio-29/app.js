@@ -178,3 +178,10 @@ const people = [
   { id: 9, name: "Gabriel", age: 20, federativeUnit: "São Paulo" },
   { id: 73, name: "Aline", age: 19, federativeUnit: "Brasília" },
 ];
+
+const agesFrequency = people.reduce((acc, { age }) => {
+  acc[age] = acc[age] + 1 || 1;
+  return acc;
+}, {});
+
+console.log(agesFrequency);

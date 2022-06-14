@@ -90,30 +90,24 @@ console.log(test(1, 5));
 */
 
 const sul = ["Rio Grande do Sul", "Santa Catarina", "Paraná"];
-const sudeste = [
-  "São Paulo",
-  "Rio de Janeiro",
-  "Minas Gerais",
-  "Espirito Santo",
-];
+const sudeste = ["São Paulo", "Rio de Janeiro", "Minas Gerais", "Espirito Santo"];
 const norte = ["Amazonas", "Rondônia", "Acre"];
 const brasil = sul.concat(sudeste);
 
 brasil.unshift("Amazonas", "Rondônia", "Acre");
 
-console.log(brasil);
-
 console.log(brasil.shift());
 
-const newSul = [];
+const newSul = brasil.filter((estado) => sul.includes(estado));
 
-brasil.forEach((estado) => {
-  if (sul.includes(estado)) {
-    newSul.push(estado);
-  }
-});
+// brasil.forEach((estado) => {
+//   if (sul.includes(estado)) {
+//     newSul.push(estado);
+//   }
+// });
 
-console.log(newSul);
+console.log('newSul: ',newSul);
+console.log('Estados do Brasil: ',brasil)
 
 /*
   04

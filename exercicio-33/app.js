@@ -5,7 +5,7 @@
   - Solucione esse problema sem declarar uma constante "book".
 */
 
-// console.log(book)
+console.log(book);
 
 /*
   02
@@ -17,6 +17,10 @@
   - Implemente a função da forma mais concisa que você conseguir.
 */
 
+const myFunc = ([item1, , item3]) => [item3, item1];
+
+console.log(myFunc([1, 2, 3])); //[3,1]
+
 /*
   03
 
@@ -25,10 +29,13 @@
 */
 
 const topics = [
-  { id: 1, name: 'Artes & cultura'},
-  { id: 2, name: 'Negócios & finanças'},
-  { id: 3, name: 'Carreiras'}
-]
+  { id: 1, name: "Artes & cultura" },
+  { id: 2, name: "Negócios & finanças" },
+  { id: 3, name: "Carreiras" },
+];
+
+const [, , { name }] = topics;
+//debugger
 
 /*
   04
@@ -38,7 +45,21 @@ const topics = [
     'red', 'green' e 'blue'.
 */
 
-const colors = ['#FF00FF', ['#FF0D0D', '#0AFA00', '#011EFA'], '#7BF0FF']
+const colors = ["#FF00FF", ["#FF0D0D", "#0AFA00", "#011EFA"], "#7BF0FF"];
+
+const [, [red, green, blue]] = colors;
+//debugger;
+
+//destructuring em objetos
+const obj = {
+  prop1: {
+    innerProp1: 1,
+  },
+};
+
+const { prop1: { innerProp1 },} = obj;
+
+console.log(innerProp1)
 
 /*
   05
@@ -54,8 +75,13 @@ const colors = ['#FF00FF', ['#FF0D0D', '#0AFA00', '#011EFA'], '#7BF0FF']
     - Faça a função retornar "Olá, meu nome é [NOME]!".
 */
 
-// console.log(greet({ name: 'Roger' }, 'name'))
-// console.log(greet({}, 'personName'))
+const greet = ()=>{
+  return `Olá, meu nome é [NOME]!`
+}
+
+
+console.log(greet({ name: 'Roger' }, 'name'))
+console.log(greet({}, 'personName'))
 
 /*
   06

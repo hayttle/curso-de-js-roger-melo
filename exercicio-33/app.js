@@ -57,9 +57,11 @@ const obj = {
   },
 };
 
-const { prop1: { innerProp1 },} = obj;
+const {
+  prop1: { innerProp1 },
+} = obj;
 
-console.log(innerProp1)
+console.log(innerProp1);
 
 /*
   05
@@ -75,13 +77,13 @@ console.log(innerProp1)
     - Faça a função retornar "Olá, meu nome é [NOME]!".
 */
 
-const greet = ()=>{
-  return `Olá, meu nome é [NOME]!`
-}
+const greet = (obj, dynamicName) => {
+  const { [dynamicName]: name = "desconhecido" } = obj;
+  return `Olá, meu nome é ${name}!`;
+};
 
-
-console.log(greet({ name: 'Roger' }, 'name'))
-console.log(greet({}, 'personName'))
+console.log(greet({ name: "Roger" }, "name"));    
+console.log(greet({}, "personName"));
 
 /*
   06

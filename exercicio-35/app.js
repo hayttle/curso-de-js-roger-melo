@@ -5,6 +5,14 @@
     e retorna o valor da key parseado para objeto javascript.
 */
 
+const items = [{ PC: 1 }, { Mouse: 5 }];
+
+localStorage.setItem("items", JSON.stringify(items));
+
+const getValueLocalStorage = (key) => localStorage.getItem(key);
+
+// console.log(JSON.parse(getValueLocalStorage("items")));
+
 /*
   02
 
@@ -18,11 +26,11 @@
   Dica: pesquise por valueAsNumber.
 */
 
-const input = document.querySelector('[data-js="input"]')
+const input = document.querySelector('[data-js="input"]');
 
-input.addEventListener('input', event => {
-  console.log(event.target.value)
-})
+input.addEventListener("input", (event) => {
+  console.log(event.target.valueAsNumber);
+});
 
 /*
   03
@@ -39,28 +47,32 @@ input.addEventListener('input', event => {
     retornar 60 e a segunda invocação, 10.
 */
 
-function add100 (num) {
-  return num + 100
+function add100(num) {
+  return num + 100;
 }
 
-function divByFive (num) {
-  return num / 5
+function divByFive(num) {
+  return num / 5;
 }
 
-function multiplyByThree (num) {
-  return num * 3
+function multiplyByThree(num) {
+  return num * 3;
 }
 
-function multiplyFive (num) {
-  return num * 5
+function multiplyFive(num) {
+  return num * 5;
 }
 
-function addTen (num) {
-  return num + 10
+function addTen(num) {
+  return num + 10;
 }
 
-// console.log(combineOperations(0, [add100, divByFive, multiplyByThree]))
-// console.log(combineOperations(0, [divByFive, multiplyFive, addTen]))
+const combineOperations = (num, []) => {
+
+}
+
+console.log(combineOperations(0, [add100, divByFive, multiplyByThree]))
+console.log(combineOperations(0, [divByFive, multiplyFive, addTen]))
 
 /*
   04
@@ -72,37 +84,37 @@ function addTen (num) {
 const albums = [
   {
     id: 537,
-    title: 'The Dark Side of the Moon',
-    artist: 'Pink Floyd',
-    price: 59.90,
-    genre: 'Progressive Rock'
+    title: "The Dark Side of the Moon",
+    artist: "Pink Floyd",
+    price: 59.9,
+    genre: "Progressive Rock",
   },
   {
     id: 975,
-    title: 'Houses of the Holy',
-    artist: 'Led Zeppelin',
-    price: 81.00,
-    genre: 'Rock'
+    title: "Houses of the Holy",
+    artist: "Led Zeppelin",
+    price: 81.0,
+    genre: "Rock",
   },
   {
     id: 359,
-    title: 'Heaven and Hell',
-    artist: 'Black Sabbath',
-    price: 49.90,
-    genre: 'Heavy metal'
-  }
-]
+    title: "Heaven and Hell",
+    artist: "Black Sabbath",
+    price: 49.9,
+    genre: "Heavy metal",
+  },
+];
 
 const searchAlbum = {
   id: 975,
-  title: 'Houses of the Holy',
-  artist: 'Led Zeppelin',
-  price: 81.00,
-  genre: 'Rock'
-}
+  title: "Houses of the Holy",
+  artist: "Led Zeppelin",
+  price: 81.0,
+  genre: "Rock",
+};
 
 if (albums.includes(searchAlbum)) {
-  console.log(`${JSON.stringify(searchAlbum)} existe no array albums.`)
+  console.log(`${JSON.stringify(searchAlbum)} existe no array albums.`);
 }
 
 /*
@@ -112,15 +124,15 @@ if (albums.includes(searchAlbum)) {
 */
 
 const obj = {
-  prop1: 'a',
-  prop2: 'b',
+  prop1: "a",
+  prop2: "b",
   prop3: null,
   prop4: true,
   prop5: false,
   prop6: [9, { x: 1, y: 2 }],
   prop7: 7,
-  prop8: { a: 'x', b: 'y' },
-}
+  prop8: { a: "x", b: "y" },
+};
 
 /*
   06

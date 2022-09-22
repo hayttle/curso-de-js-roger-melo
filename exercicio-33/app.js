@@ -97,7 +97,7 @@ console.log(greet({}, "personName"));
   - Não é necessário implementar condicionais, objetos, ou arrays para fazer
     isso.
 */
-
+//adicionado o parâmetro "&language=pt-BR" na URL da função getWeatherURL()
 /*
   07
 

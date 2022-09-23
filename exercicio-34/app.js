@@ -25,7 +25,7 @@ const invertStr = (str) => {
 const str = "123";
 const abc = "abc";
 
-// console.log(invertStr(str),invertStr(abc));
+ console.log(invertStr(str),invertStr(abc));
 
 /*
   02

@@ -12,7 +12,7 @@ const numbers = [50, 100, 50]
 
 const sum = (x, y, z) => x + y + z
 
-console.log(sum(...numbers))
+// console.log(sum(...numbers))
 
 /*
   02
@@ -25,7 +25,7 @@ console.log(sum(...numbers))
 
 const name = "hayttle"
 const capitalizedName = [name[0].toUpperCase(), ...name.slice(1)].join("")
-console.log(capitalizedName)
+// console.log(capitalizedName)
 
 /*
   03
@@ -37,13 +37,13 @@ console.log(capitalizedName)
 */
 
 const randomNumber = Math.round(Math.random() * 100)
-console.log(randomNumber)
+// console.log(randomNumber)
 const obj = {
   a: 1,
   b: 2,
   ...(randomNumber > 50 ? {c: 3} : {d: 4})
 }
-console.log(obj)
+// console.log(obj)
 
 /*
   04
@@ -62,7 +62,7 @@ const first = (obj) => second(obj)
 
 const object = {k: "t"}
 const object2 = first(object)
-console.log(object, object2)
+// console.log(object, object2)
 
 /*
   05
@@ -100,7 +100,7 @@ const values = timestamps.reduce((acc, {date, value}) => {
   return acc
 }, {})
 
-console.log(values)
+// console.log(values)
 
 /*
   06
@@ -134,7 +134,7 @@ const forEach = (array, func) => {
 
 const logMessage = (item, index, array) => {
   const message = `"${item}" é o ${index + 1}o item do array [${array.join(", ")}]`
-  console.log(message)
+  // console.log(message)
 }
 
 const sumArrayItem = (item) => {
@@ -143,7 +143,7 @@ const sumArrayItem = (item) => {
 
 forEach(oddNumbers, logMessage)
 forEach(oddNumbers, sumArrayItem)
-console.log(accumulator)
+// console.log(accumulator)
 
 /*
   07
@@ -173,3 +173,26 @@ console.log(accumulator)
     3 No passo 3.4, se o slide exibido atualmente não corresponder ao index do 
       1º slide, o slide anterior deve ser exibido.
 */
+
+const slides = document.querySelectorAll("[data-js=carousel__item]")
+const previousBtn = document.querySelector("[data-js=carousel__button--prev]")
+const nextBtn = document.querySelector("[data-js=carousel__button--next]")
+
+let currentSlideIndex = 0
+const lastSlideIndex = slides.length - 1
+
+const changeSlidesClasses = (currentSlideIndex) => {
+  slides.forEach((slide) => slide.classList.remove("carousel__item--visible"))
+  slides[currentSlideIndex].classList.add("carousel__item--visible")
+}
+
+previousBtn.addEventListener("click", () => {
+  const correctSlideIndex = currentSlideIndex === 0 ? (currentSlideIndex = lastSlideIndex) : --currentSlideIndex
+  changeSlidesClasses(correctSlideIndex)
+})
+
+nextBtn.addEventListener("click", () => {
+  const correctSlideIndex = currentSlideIndex === lastSlideIndex ? (currentSlideIndex = 0) : ++currentSlideIndex
+
+  changeSlidesClasses(correctSlideIndex)
+})

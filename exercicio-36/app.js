@@ -12,7 +12,7 @@ const numbers = [50, 100, 50]
 
 const sum = (x, y, z) => x + y + z
 
-console.log(sum(numbers))
+console.log(sum(...numbers))
 
 /*
   02
@@ -22,6 +22,10 @@ console.log(sum(numbers))
   - Utilizando (também) o spread operator, exiba no console o seu nome com 
     apenas a primeira letra maiúscula.
 */
+
+const name = "hayttle"
+const capitalizedName = [name[0].toUpperCase(), ...name.slice(1)].join("")
+console.log(capitalizedName)
 
 /*
   03
@@ -33,12 +37,12 @@ console.log(sum(numbers))
 */
 
 const randomNumber = Math.round(Math.random() * 100)
-
+console.log(randomNumber)
 const obj = {
   a: 1,
-  b: 2
+  b: 2,
+  ...(randomNumber > 50 ? {c: 3} : {d: 4})
 }
-
 console.log(obj)
 
 /*
@@ -48,22 +52,17 @@ console.log(obj)
     criado permaneça intacto.
 */
 
-const h = w => {
-  w.d = 3
-}
+const third = (obj) => ({
+  ...obj,
+  d: 3
+})
 
-const q = f => {
-  h(f)
-}
+const second = (obj) => third(obj)
+const first = (obj) => second(obj)
 
-const i = b => {
-  q(b)
-}
-
-const v = { k: 't' }
-
-i(v)
-console.log(v)
+const object = {k: "t"}
+const object2 = first(object)
+console.log(object, object2)
 
 /*
   05
@@ -83,18 +82,25 @@ console.log(v)
 
 const timestamps = [
   {
-    date: '3242348-9842340234',
+    date: "3242348-9842340234",
     value: 6
   },
   {
-    date: '99e89-499958',
+    date: "99e89-499958",
     value: 31
   },
   {
-    date: '8596646656666r488',
+    date: "8596646656666r488",
     value: 17
   }
 ]
+
+const values = timestamps.reduce((acc, {date, value}) => {
+  acc[date] = value
+  return acc
+}, {})
+
+console.log(values)
 
 /*
   06
@@ -118,6 +124,26 @@ const timestamps = [
 
 let accumulator = 0
 const oddNumbers = [51, 97, 65, 23]
+
+const forEach = (array, func) => {
+  for (let index = 0; index < array.length; index++) {
+    const item = array[index]
+    func(item, index, array)
+  }
+}
+
+const logMessage = (item, index, array) => {
+  const message = `"${item}" é o ${index + 1}o item do array [${array.join(", ")}]`
+  console.log(message)
+}
+
+const sumArrayItem = (item) => {
+  accumulator += item
+}
+
+forEach(oddNumbers, logMessage)
+forEach(oddNumbers, sumArrayItem)
+console.log(accumulator)
 
 /*
   07

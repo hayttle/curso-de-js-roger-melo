@@ -79,20 +79,26 @@ const truthyValues = values.filter(Boolean)
     funcione.
 */
 
-const formatTimeUnit = (unit) => (unit < 10 ? `0${unit}` : unit)
+const formatTimeUnits = (units) => units.map((unit) => (unit < 10 ? `0${unit}` : unit))
 
-const getTime = (template) => {
+const getTime = () => {
   const date = new Date()
   const hours = date.getHours()
   const minutes = date.getMinutes()
   const seconds = date.getSeconds()
 
-  const formattedHours = formatTimeUnit(hours)
-  const formattedMinutes = formatTimeUnit(minutes)
-  const formattedSeconds = formatTimeUnit(seconds)
+  return [hours, minutes, seconds]
+}
 
-  const time = template.replace("h", formattedHours).replace("m", formattedMinutes).replace("s", formattedSeconds)
-  return time
+const getFormattedTime = (template) => {
+  const [hours, minutes, seconds] = getTime()
+
+  const formattedTime = formatTimeUnits([hours, minutes, seconds])
+
+  return template
+    .split(":")
+    .map((_, index) => formattedTime[index])
+    .join(":")
 }
 
 class Clock {
@@ -101,7 +107,7 @@ class Clock {
   }
 
   render() {
-    const formattedTime = getTime(this.template)
+    const formattedTime = getFormattedTime(this.template)
     console.log(formattedTime)
   }
 
@@ -140,6 +146,17 @@ const clock = new ExtendedClock({template: "h:m:s", precision: 1000})
     caractere for inserido no textarea, exiba no parágrafo a quantidade de 
     caracteres que o textarea contém.
 */
+
+const textArea = document.querySelector("[data-js='textarea']")
+const paragraph = document.querySelector("[data-js='paragraph']")
+
+const showCounterCaracter = (event) => {
+  const countCaracters = event.target.value.length
+  const maxCountCaracters = event.target.getAttribute("maxlength")
+  paragraph.textContent = `${countCaracters}/${maxCountCaracters}`
+}
+
+textArea.addEventListener("input", showCounterCaracter)
 
 /*
   06

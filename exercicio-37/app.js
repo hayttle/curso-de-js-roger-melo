@@ -6,19 +6,21 @@
 */
 
 class Animal {
-  constructor (name) {
+  constructor(name) {
     this.name = name
   }
 }
 
 class Rabbit extends Animal {
-  constructor (name) {
-    this.name = name
+  constructor(name) {
+    super(name)
     this.created = new Date()
   }
 }
 
-// let rabbit = new Rabbit('White Rabbit')
+let rabbit = new Rabbit("White Rabbit")
+
+// console.log(rabbit)
 
 /*
   02
@@ -27,11 +29,31 @@ class Rabbit extends Animal {
     funcione.
 */
 
-// const counter = new Counter()
+class Counter {
+  constructor() {
+    this.count = 0
+  }
+  get value() {
+    return this.count
+  }
+  increment() {
+    this.count++
+  }
 
-// counter.getValue()
+  /**
+   * @param {number} aNumber
+   */
+  set newValue(aNumber) {
+    this.count = aNumber
+  }
+}
+
+const counter = new Counter()
+
+// console.log(counter.value)
 // counter.increment()
-// counter.getValue()
+// counter.newValue = 7
+// console.log(counter.value)
 
 /*
   03
@@ -41,14 +63,11 @@ class Rabbit extends Animal {
   - Não invoque o construtor.
 */
 
-const values = [
-  0,
-  {},
-  '',
-  [],
-  NaN,
-  () => {}
-]
+const values = [0, {}, "", [], NaN, () => {}]
+
+const truthyValues = values.filter(Boolean)
+
+// console.log(truthyValues)
 
 /*
   04
@@ -60,62 +79,57 @@ const values = [
     funcione.
 */
 
-// class Clock {
-//   constructor ({ template }) {
-//     this.template = template
-//   }
+const formatTimeUnit = (unit) => (unit < 10 ? `0${unit}` : unit)
 
-//   render () {
-//     const date = new Date()
-//     let hours = date.getHours()
-//     let minutes = date.getMonth()
-//     let seconds = date.getSeconds()
+const getTime = (template) => {
+  const date = new Date()
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+  const seconds = date.getSeconds()
 
-//     if (hours < 10) {
-//       hours = `0${hours}`
-//     }
+  const formattedHours = formatTimeUnit(hours)
+  const formattedMinutes = formatTimeUnit(minutes)
+  const formattedSeconds = formatTimeUnit(seconds)
 
-//     if (minutes < 10) {
-//       minutes = `0${minutes}`
-//     }
+  const time = template.replace("h", formattedHours).replace("m", formattedMinutes).replace("s", formattedSeconds)
+  return time
+}
 
-//     if (seconds < 10) {
-//       seconds = `0${seconds}`
-//     }
+class Clock {
+  constructor({template}) {
+    this.template = template
+  }
 
-//     const formattedTime = this.template
-//       .replace('h', hours)
-//       .replace('m', minutes)
-//       .replace('s', seconds)
+  render() {
+    const formattedTime = getTime(this.template)
+    console.log(formattedTime)
+  }
 
-//     console.log(formattedTime)
-//   }
+  start() {
+    this.render()
+    this.timer = setInterval(() => this.render(), 1000)
+  }
 
-//   start () {
-//     this.render()
-//     this.timer = setInterval(() => this.render(), 1000)
-//   }
+  stop() {
+    clearInterval(this.timer)
+  }
+}
 
-//   stop () {
-//     clearInterval(this.timer)
-//   }
-// }
+class ExtendedClock extends Clock {
+  constructor(options) {
+    super(options)
 
-// class ExtendedClock extends Clock {
-//   constructor ({ options }) {
-//     super(options)
-    
-//     let { precision = 1000 } = options
-//     this.precision = precision
-//   }
+    const {precision = 1000} = options
+    this.precision = precision
+  }
 
-//   start () {
-//     this.render()
-//     this.timer = setInterval(() => this.render(), this.precision)
-//   }
-// }
+  start() {
+    this.render()
+    this.timer = setInterval(() => this.render(), this.precision)
+  }
+}
 
-// const clock = ExtendedClock({ template: 'h:m:s', precision: 1000 })
+const clock = new ExtendedClock({template: "h:m:s", precision: 1000})
 
 // clock.start()
 
@@ -126,8 +140,6 @@ const values = [
     caractere for inserido no textarea, exiba no parágrafo a quantidade de 
     caracteres que o textarea contém.
 */
-
-
 
 /*
   06

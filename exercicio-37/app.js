@@ -184,3 +184,4 @@ textArea.addEventListener("input", showCounterCaracter)
     vídeo de correção dos exercícios um link para a aula de introdução ao 
     reduce e um link para a documentação do método no MDN.
 */
+ 

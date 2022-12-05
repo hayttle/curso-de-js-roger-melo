@@ -10,7 +10,37 @@
   - Teste o método getColor do prototype dos carros.
 */
 
+class Car {
+  constructor(name, color) {
+    ;(this.name = name), (this.color = color)
+  }
+}
 
+Car.prototype.getColor = function () {
+  return this.color
+}
+
+const car1 = new Car("Gol", "preto")
+const car2 = new Car("Celta", "vermelho")
+
+// console.log(car1.getColor(), car2.getColor())
+
+// ===============
+
+class Carro {
+  constructor(name, color) {
+    ;(this.name = name), (this.color = color)
+  }
+
+  get getColor() {
+    return this.color
+  }
+}
+
+const car3 = new Carro("Corsa", "azul")
+const car4 = new Carro("Pálio", "branco")
+
+// console.log(car3.getColor,car4.getColor)
 
 /*
   02
@@ -25,16 +55,17 @@
 */
 
 const movie = {
-  title: 'Forrest Gump',
-  director: 'Robert Zemeckis',
-  starringRole: 'Tom Hanks'
+  title: "Forrest Gump",
+  director: "Robert Zemeckis",
+  starringRole: "Tom Hanks"
+}
+function getSummary() {
+  const {title, director, starringRole} = this
+  return `${title} foi dirigido por ${director} e tem ${starringRole} no papel principal.`
 }
 
-function getSummary () {
-  return `${this.title} foi dirigido por ${this.director} e tem ${this.starringRole} no papel principal.`
-}
-
-console.log(getSummary())
+// console.log(getSummary.call(movie))
+// console.log(getSummary.apply(movie))
 
 /*
   03
@@ -48,15 +79,20 @@ console.log(getSummary())
   - Descomente o código e crie a função.
 */
 
-/*
-console.log(
+const createObj = (acc, [key, value]) => {
+  acc[key] = value
+  return acc
+}
+
+const arrayToObj = (array) => array.reduce(createObj, {})
+
+/* console.log(
   arrayToObj([
-    ['prop1', 'value1'], 
-    ['prop2', 'value2'],
-    ['prop3', 'value3']
+    ["prop1", "value1"],
+    ["prop2", "value2"],
+    ["prop3", "value3"]
   ])
-)
-*/
+) */
 
 /*
   04
@@ -64,8 +100,7 @@ console.log(
   - Refatore as classes abaixo para factory functions.
 */
 
-const formatTimeUnits = units => units
-  .map(unit => unit < 10 ? `0${unit}` : unit)
+const formatTimeUnits = (units) => units.map((unit) => (unit < 10 ? `0${unit}` : unit))
 
 const getTime = () => {
   const date = new Date()
@@ -76,53 +111,45 @@ const getTime = () => {
   return [hours, minutes, seconds]
 }
 
-const getFormattedTime = template => {
+const getFormattedTime = (template) => {
   const [hours, minutes, seconds] = getTime()
   const formattedTime = formatTimeUnits([hours, minutes, seconds])
 
   return template
-    .split(':')
+    .split(":")
     .map((_, index) => formattedTime[index])
-    .join(':')
+    .join(":")
 }
 
-class Clock {
-  constructor ({ template }) {
-    this.template = template
-  }
-
-  render () {
+const makeClock = ({template}) => ({
+  template,
+  render() {
     const formattedTime = getFormattedTime(this.template)
     console.log(formattedTime)
-  }
+  },
 
-  start () {
+  start() {
     const oneSecond = 1000
 
     this.render()
     this.timer = setInterval(() => this.render(), oneSecond)
-  }
+  },
 
-  stop () {
+  stop() {
     clearInterval(this.timer)
   }
-}
+})
 
-class ExtendedClock extends Clock {
-  constructor (options) {
-    super(options)
-    
-    const { precision = 1000 } = options
-    this.precision = precision
-  }
-
-  start () {
+const makeExtendedClock = ({template, precision = 1000}) => ({
+  precision,
+  ...makeClock({template}),
+  start() {
     this.render()
     this.timer = setInterval(() => this.render(), this.precision)
   }
-}
+})
 
-const clock = new ExtendedClock({ template: 'h:m:s', precision: 1000 })
+const clock = makeExtendedClock({template: "h:m:s", precision: 1000})
 
 // clock.start()
 
@@ -165,8 +192,6 @@ const clock = new ExtendedClock({ template: 'h:m:s', precision: 1000 })
         - download, com o valor 'table.csv'.
 */
 
-
-
 /*
   06
   
@@ -179,8 +204,6 @@ const clock = new ExtendedClock({ template: 'h:m:s', precision: 1000 })
   - O procedimento é o mesmo mostrado nas aulas da etapa em que construímos essa
     aplicação.
 */
-
-
 
 /*
   07

@@ -278,40 +278,6 @@ const inputAmountEl = document.querySelector('[data-js="currency-one-times"]')
 const convertedValueEl = document.querySelector('[data-js="converted-value"]')
 const convertedPrecisionEl = document.querySelector('[data-js="conversion-precision"]')
 let internalExchangeRate = {}
-let currencyOneSelected = "USD"
-let currencyTwoSelected = "BRL"
-let amount = 1
-
-currencyOneEl.addEventListener("input", async (event) => {
-  currencyOneSelected = event.target.value
-
-  internalExchangeRate = {...(await getExchangeRates(currencyOneSelected))}
-
-  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoSelected])
-    .toFixed(2)
-    .replace(".", ",")
-    
-  convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
-    internalExchangeRate.conversion_rates[currencyTwoSelected]
-  ).replace(".", ",")} ${currencyTwoSelected}`
-})
-
-currencyTwoEl.addEventListener("input", (event) => {
-  currencyTwoSelected = event.target.value
-  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoSelected])
-    .toFixed(2)
-    .replace(".", ",")
-  convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
-    internalExchangeRate.conversion_rates[currencyTwoSelected]
-  ).replace(".", ",")} ${currencyTwoSelected}`
-})
-
-inputAmountEl.addEventListener("input", (event) => {
-  amount = event.target.value
-  convertedValueEl.textContent = (amount * internalExchangeRate.conversion_rates[currencyTwoEl.value])
-    .toFixed(2)
-    .replace(".", ",")
-})
 
 const getExchangeRates = async (currency) => {
   const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${currency}`
@@ -333,32 +299,6 @@ const getExchangeRates = async (currency) => {
   }
 }
 
-const getConversionRates = async () => {
-  const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${currencyOneSelected}/${currencyTwoSelected}/${amount}`
-  try {
-    const response = await fetch(URL)
-    if (!response.ok) {
-      throw new Error("Erro de conexão!")
-    }
-    const conversionRateData = await response.json()
-
-    if (conversionRateData.result !== "success") {
-      throw new Error("Erro de requisição.")
-    }
-    update(conversionRateData)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-// const update = async (conversionRateData) => {
-//   const exchangeRateData = await getExchangeRates(currencyOneSelected)
-//   convertedValueEl.textContent = (amount * conversionRateData.conversion_rate).toFixed(2).replace(".", ",")
-//   convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
-//     exchangeRateData.conversion_rates[currencyTwoSelected]
-//   ).replace(".", ",")} ${currencyTwoSelected}`
-// }
-
 const init = async () => {
   internalExchangeRate = {...(await getExchangeRates("USD"))}
 
@@ -379,5 +319,36 @@ const init = async () => {
     ","
   )} BRL`
 }
+
+currencyOneEl.addEventListener("input", async (event) => {
+  const currencyOneSelected = event.target.value
+
+  internalExchangeRate = {...(await getExchangeRates(currencyOneSelected))}
+
+  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoEl.value])
+    .toFixed(2)
+    .replace(".", ",")
+
+  convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
+    internalExchangeRate.conversion_rates[currencyTwoEl.value]
+  ).replace(".", ",")} ${currencyTwoEl.value}`
+})
+
+currencyTwoEl.addEventListener("input", (event) => {
+  const currencyTwoSelected = event.target.value
+  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoSelected])
+    .toFixed(2)
+    .replace(".", ",")
+  convertedPrecisionEl.textContent = `1 ${currencyOneEl.value}  = ${String(
+    internalExchangeRate.conversion_rates[currencyTwoSelected]
+  ).replace(".", ",")} ${currencyTwoSelected}`
+})
+
+inputAmountEl.addEventListener("input", (event) => {
+  const amount = event.target.value
+  convertedValueEl.textContent = (amount * internalExchangeRate.conversion_rates[currencyTwoEl.value])
+    .toFixed(2)
+    .replace(".", ",")
+})
 
 init()

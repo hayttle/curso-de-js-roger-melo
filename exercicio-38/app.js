@@ -192,6 +192,29 @@ const clock = makeExtendedClock({template: "h:m:s", precision: 1000})
         - download, com o valor 'table.csv'.
 */
 
+const exportBtn = document.querySelector('[data-js="export-table-btn"]')
+const tableRows = document.querySelectorAll("tr")
+
+const getCellsText = ({textContent}) => textContent
+
+const getStringWithCommas = ({cells}) => Array.from(cells).map(getCellsText).join(",")
+
+const createCSVString = () => Array.from(tableRows).map(getStringWithCommas).join("\n")
+
+const setCSVDownload = (CSVString) => {
+  const CSVURI = `data:text/csvcharset=utf-8,${encodeURIComponent(CSVString)}`
+
+  exportBtn.setAttribute("href", CSVURI)
+  exportBtn.setAttribute("download", `table.csv`)
+}
+
+const exportTable = () => {
+  const CSVString = createCSVString()
+  setCSVDownload(CSVString)
+}
+
+// exportBtn.addEventListener("click", exportTable)
+
 /*
   06
   
@@ -246,3 +269,44 @@ const clock = makeExtendedClock({template: "h:m:s", precision: 1000})
   PS: o desafio aqui é você implementar essa aplicação sozinho(a) e enviá-la 
   para análise antes de ver as próximas aulas, ok? =)
 */
+const API_KEY = "6a818a525d02ac43610601ca"
+// const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${base_code}/${target_code}/${amount}`
+
+const currencyOneEl = document.querySelector('[data-js="currency-one"]')
+const currencyTwoEl = document.querySelector('[data-js="currency-two"]')
+const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`
+
+const getExchangeRates = async () => {
+  try {
+    const response = await fetch(URL)
+    if (!response.ok) {
+      throw new Error("Erro de conexão!")
+    }
+
+    const exchangeRateData = await response.json()
+
+    if (exchangeRateData.result !== "success") {
+      throw new Error("Erro de requisição.")
+    }
+    return exchangeRateData
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const init = async () => {
+  const exchangeRateData = await getExchangeRates()
+
+  const getOptions = (selectedCurrency) =>
+    Object.keys(exchangeRateData.conversion_rates)
+      .map(
+        (currency) =>
+          `<option ${currency === selectedCurrency ? "selected" : ""} value='${currency}'>${currency}</option>`
+      )
+      .join("")
+
+  currencyOneEl.innerHTML = getOptions("USD")
+  currencyTwoEl.innerHTML = getOptions("BRL")
+}
+
+init()

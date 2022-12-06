@@ -274,9 +274,47 @@ const API_KEY = "6a818a525d02ac43610601ca"
 
 const currencyOneEl = document.querySelector('[data-js="currency-one"]')
 const currencyTwoEl = document.querySelector('[data-js="currency-two"]')
-const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`
+const inputAmountEl = document.querySelector('[data-js="currency-one-times"]')
+const convertedValueEl = document.querySelector('[data-js="converted-value"]')
+const convertedPrecisionEl = document.querySelector('[data-js="conversion-precision"]')
+let internalExchangeRate = {}
+let currencyOneSelected = "USD"
+let currencyTwoSelected = "BRL"
+let amount = 1
 
-const getExchangeRates = async () => {
+currencyOneEl.addEventListener("input", async (event) => {
+  currencyOneSelected = event.target.value
+
+  internalExchangeRate = {...(await getExchangeRates(currencyOneSelected))}
+
+  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoSelected])
+    .toFixed(2)
+    .replace(".", ",")
+    
+  convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
+    internalExchangeRate.conversion_rates[currencyTwoSelected]
+  ).replace(".", ",")} ${currencyTwoSelected}`
+})
+
+currencyTwoEl.addEventListener("input", (event) => {
+  currencyTwoSelected = event.target.value
+  convertedValueEl.textContent = (inputAmountEl.value * internalExchangeRate.conversion_rates[currencyTwoSelected])
+    .toFixed(2)
+    .replace(".", ",")
+  convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
+    internalExchangeRate.conversion_rates[currencyTwoSelected]
+  ).replace(".", ",")} ${currencyTwoSelected}`
+})
+
+inputAmountEl.addEventListener("input", (event) => {
+  amount = event.target.value
+  convertedValueEl.textContent = (amount * internalExchangeRate.conversion_rates[currencyTwoEl.value])
+    .toFixed(2)
+    .replace(".", ",")
+})
+
+const getExchangeRates = async (currency) => {
+  const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${currency}`
   try {
     const response = await fetch(URL)
     if (!response.ok) {
@@ -288,17 +326,44 @@ const getExchangeRates = async () => {
     if (exchangeRateData.result !== "success") {
       throw new Error("Erro de requisição.")
     }
+    internalExchangeRate = {...exchangeRateData}
     return exchangeRateData
   } catch (error) {
     console.log(error)
   }
 }
 
+const getConversionRates = async () => {
+  const URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${currencyOneSelected}/${currencyTwoSelected}/${amount}`
+  try {
+    const response = await fetch(URL)
+    if (!response.ok) {
+      throw new Error("Erro de conexão!")
+    }
+    const conversionRateData = await response.json()
+
+    if (conversionRateData.result !== "success") {
+      throw new Error("Erro de requisição.")
+    }
+    update(conversionRateData)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// const update = async (conversionRateData) => {
+//   const exchangeRateData = await getExchangeRates(currencyOneSelected)
+//   convertedValueEl.textContent = (amount * conversionRateData.conversion_rate).toFixed(2).replace(".", ",")
+//   convertedPrecisionEl.textContent = `1 ${currencyOneSelected}  = ${String(
+//     exchangeRateData.conversion_rates[currencyTwoSelected]
+//   ).replace(".", ",")} ${currencyTwoSelected}`
+// }
+
 const init = async () => {
-  const exchangeRateData = await getExchangeRates()
+  internalExchangeRate = {...(await getExchangeRates("USD"))}
 
   const getOptions = (selectedCurrency) =>
-    Object.keys(exchangeRateData.conversion_rates)
+    Object.keys(internalExchangeRate.conversion_rates)
       .map(
         (currency) =>
           `<option ${currency === selectedCurrency ? "selected" : ""} value='${currency}'>${currency}</option>`
@@ -307,6 +372,12 @@ const init = async () => {
 
   currencyOneEl.innerHTML = getOptions("USD")
   currencyTwoEl.innerHTML = getOptions("BRL")
+
+  convertedValueEl.textContent = internalExchangeRate.conversion_rates.BRL.toFixed(2).replace(".", ",")
+  convertedPrecisionEl.textContent = `1 USD  = ${String(internalExchangeRate.conversion_rates.BRL).replace(
+    ".",
+    ","
+  )} BRL`
 }
 
 init()

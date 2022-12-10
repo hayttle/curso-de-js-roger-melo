@@ -18,9 +18,9 @@
 
 const numbers = [50, 100, 50]
 
-const sum = (x, y, z) => x + y + z
+const sum = (...params) => params.reduce((acc, item) => acc + item, 0)
 
-console.log(sum(...numbers))
+// console.log(sum(...numbers, 2, 3, 5))
 
 /*
   02
@@ -28,7 +28,7 @@ console.log(sum(...numbers))
   - Descomente a div com a class "accordion", no index.html;
   - Quando um dos 3 itens do accordion for clicado exiba, abaixo do item, 
     o texto correspondente. Este é o resultado final:
-    https://youtu.be/4xnYqcqaSnI
+    https://vimeo.com/752350703/9b01da98d3
   
   Leia a dica abaixo apenas se achar necessário.
 
@@ -36,7 +36,15 @@ console.log(sum(...numbers))
     utilizando a classe "active".
 */
 
+const accordions = document.querySelectorAll(".accordion-item")
 
+accordions.forEach((accordion) =>
+  accordion.addEventListener("click", (e) => {
+    e.target.classList.toggle("active")
+    e.target.nextElementSibling.classList.toggle("active")
+
+  })
+)
 
 /*
   03
@@ -55,7 +63,7 @@ console.log(sum(...numbers))
 */
 
 const volkswagenProto = {
-  logCarInfo () {
+  logCarInfo() {
     console.log(`Volkswagen ${this.name}, cor ${this.color}.`)
   }
 }
@@ -77,9 +85,8 @@ const volkswagenProto = {
     modificando o caractere que ela recebe como segundo argumento.
 */
 
-const aString = 'O Curso de JavaScript Roger Melo funciona com turmas fechadas, abertas poucas vezes e é focado em quem ainda não é fluente em JS. Ou seja, quem não consegue construir aplicações web com JavaScript puro.'
-
-
+const aString =
+  "O Curso de JavaScript Roger Melo funciona com turmas fechadas, abertas poucas vezes e é focado em quem ainda não é fluente em JS. Ou seja, quem não consegue construir aplicações web com JavaScript puro."
 
 // console.log(getIndexesOfCharacter(aString, 'b'))
 
@@ -126,8 +133,6 @@ const aString = 'O Curso de JavaScript Roger Melo funciona com turmas fechadas, 
       ela já tem + 1 e faça characterIndex receber 0.
 */
 
-
-
 /*
   06
 
@@ -135,21 +140,19 @@ const aString = 'O Curso de JavaScript Roger Melo funciona com turmas fechadas, 
 */
 
 const wrongDataFormat = [
-  'preto-PP',
-  'preto-M',
-  'preto-G',
-  'preto-GG',
-  'preto-GG',
-  'branco-PP',
-  'branco-G',
-  'vermelho-M',
-  'azul-XG',
-  'azul-XG',
-  'azul-XG',
-  'azul-P'
+  "preto-PP",
+  "preto-M",
+  "preto-G",
+  "preto-GG",
+  "preto-GG",
+  "branco-PP",
+  "branco-G",
+  "vermelho-M",
+  "azul-XG",
+  "azul-XG",
+  "azul-XG",
+  "azul-P"
 ]
-
-
 
 /*
   {

@@ -36,15 +36,16 @@ const sum = (...params) => params.reduce((acc, item) => acc + item, 0)
     utilizando a classe "active".
 */
 
-const accordions = document.querySelectorAll(".accordion-item")
+const accordion = document.querySelector("[data-js='accordion']")
 
-accordions.forEach((accordion) =>
-  accordion.addEventListener("click", (e) => {
-    e.target.classList.toggle("active")
-    e.target.nextElementSibling.classList.toggle("active")
+accordion.addEventListener("click", (e) => {
+  const accordionHeaderId = e.target.dataset.accordionHeader
+  const clickedAccordionHeader = document.querySelector(`[data-accordion-header="${accordionHeaderId}"]`)
+  const accordionBody = document.querySelector(`[data-accordion-body="${accordionHeaderId}"]`)
 
-  })
-)
+  clickedAccordionHeader.classList.toggle("active")
+  accordionBody.classList.toggle("active")
+})
 
 /*
   03

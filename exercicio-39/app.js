@@ -201,7 +201,7 @@ const type = () => {
     characterIndex = 0
   }
 }
-setInterval(type, 200)
+// setInterval(type, 200)
 
 /*
   06
@@ -222,6 +222,16 @@ const wrongDataFormat = [
   "azul-XG",
   "azul-P"
 ]
+
+const dataformatted = wrongDataFormat.reduce((acc, item) => {
+  const [color, size] = item.split("-")
+  acc[color] = acc[color] || {}
+  acc[color][size] = acc[color][size] || 0
+  acc[color][size]++
+  return acc
+}, {})
+
+console.log(dataformatted)
 
 /*
   {

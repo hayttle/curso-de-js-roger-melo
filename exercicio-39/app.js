@@ -132,7 +132,10 @@ const aString =
   "O Curso de JavaScript Roger Melo funciona com turmas fechadas, abertas poucas vezes e é focado em quem ainda não é fluente em JS. Ou seja, quem não consegue construir aplicações web com JavaScript puro."
 
 const getIndexesOfCharacter = (aString, character) =>
-  [...aString].reduce((acc, item, index) => (item.toLowerCase() === character.toLowerCase() ? [...acc, index] : acc), [])
+  [...aString].reduce(
+    (acc, item, index) => (item.toLowerCase() === character.toLowerCase() ? [...acc, index] : acc),
+    []
+  )
 
 // console.log(getIndexesOfCharacter(aString, "o"))
 
@@ -176,7 +179,34 @@ const getIndexesOfCharacter = (aString, character) =>
       ela já tem + 1 e faça characterIndex receber 0.
 */
 
+const typing = document.querySelector('[data-js="typing"]')
 
+const messages = ["sou fluente em JS", "construo aplicações web com JS puro"]
+let messageIndex = 0
+let characterIndex = 0
+let currentMessage = ""
+let currentCharacters = ""
+
+const type = () => {
+  currentMessage = messages[messageIndex]
+  currentCharacters = currentMessage.slice(0,characterIndex++)
+  
+  typing.textContent = currentCharacters
+
+  if (messageIndex === messages.length) {
+    messageIndex = 0
+  }
+
+
+
+
+  if (currentCharacters === currentMessage.length) {
+    messageIndex++
+    characterIndex = 0
+  }
+}
+// type()
+setInterval(type,200)
 
 /*
   06
@@ -184,21 +214,19 @@ const getIndexesOfCharacter = (aString, character) =>
 */
 
 const wrongDataFormat = [
-  'preto-PP',
-  'preto-M',
-  'preto-G',
-  'preto-GG',
-  'preto-GG',
-  'branco-PP',
-  'branco-G',
-  'vermelho-M',
-  'azul-XG',
-  'azul-XG',
-  'azul-XG',
-  'azul-P'
+  "preto-PP",
+  "preto-M",
+  "preto-G",
+  "preto-GG",
+  "preto-GG",
+  "branco-PP",
+  "branco-G",
+  "vermelho-M",
+  "azul-XG",
+  "azul-XG",
+  "azul-XG",
+  "azul-P"
 ]
-
-
 
 /*
   {

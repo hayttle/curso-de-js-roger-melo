@@ -188,25 +188,20 @@ let currentMessage = ""
 let currentCharacters = ""
 
 const type = () => {
-  currentMessage = messages[messageIndex]
-  currentCharacters = currentMessage.slice(0,characterIndex++)
-  
-  typing.textContent = currentCharacters
-
   if (messageIndex === messages.length) {
     messageIndex = 0
   }
 
+  currentMessage = messages[messageIndex]
+  currentCharacters = currentMessage.slice(0, characterIndex++)
+  typing.textContent = currentCharacters
 
-
-
-  if (currentCharacters === currentMessage.length) {
+  if (currentCharacters.length === currentMessage.length) {
     messageIndex++
     characterIndex = 0
   }
 }
-// type()
-setInterval(type,200)
+setInterval(type, 200)
 
 /*
   06

@@ -38,16 +38,36 @@ const sum = (...params) => params.reduce((acc, item) => acc + item, 0)
 
 const accordion = document.querySelector("[data-js='accordion']")
 
-accordion.addEventListener("click", (e) => {
+const closeAccordionItem = (accordionHeaderToBeClosed) => {
+  const accordionHeaderId = accordionHeaderToBeClosed.dataset.accordionHeader
+  const accordionBodyToBeClosed = document.querySelector(`[data-accordion-body="${accordionHeaderId}"]`)
+
+  accordionBodyToBeClosed.classList.remove("active")
+  accordionHeaderToBeClosed.classList.remove("active")
+}
+
+const handleAccordionClick = (e) => {
   const accordionHeaderId = e.target.dataset.accordionHeader
   const clickedAccordionHeader = document.querySelector(`[data-accordion-header="${accordionHeaderId}"]`)
   const accordionItemToBeOpened = document.querySelector(`[data-accordion-body="${accordionHeaderId}"]`)
 
-  if (accordionHeaderId) {
-    clickedAccordionHeader.classList.toggle("active")
-    accordionItemToBeOpened.classList.toggle("active")
+  const accordionHeaderToBeClosed = Array.from(document.querySelectorAll('[data-js="accordion-header"]'))
+    .filter((accordionHeader) => accordionHeader !== clickedAccordionHeader)
+    .find((accordionHeader) => accordionHeader.classList.contains("active"))
+
+  if (!accordionHeaderId) {
+    return
   }
-})
+
+  if (accordionHeaderToBeClosed) {
+    closeAccordionItem(accordionHeaderToBeClosed)
+  }
+
+  clickedAccordionHeader.classList.toggle("active")
+  accordionItemToBeOpened.classList.toggle("active")
+}
+
+// accordion.addEventListener("click", handleAccordionClick)
 
 /*
   03
@@ -65,14 +85,34 @@ accordion.addEventListener("click", (e) => {
     - Teste o método logCarInfo nos dois objetos.
 */
 
+const carMaker = ({name, color}, carProto) => {
+  const car = Object.create(carProto)
+  car.name = name
+  car.color = color
+  return car
+}
+
 const volkswagenProto = {
   logCarInfo() {
     console.log(`Volkswagen ${this.name}, cor ${this.color}.`)
   }
 }
 
-// const amarok = carMaker({ name: 'Amarok', color: 'preta' })
-// const jetta = carMaker({ name: 'Jetta', color: 'prata' })
+const toyotaProto = {
+  logCarInfo() {
+    console.log(`Toyota ${this.name}, cor ${this.color}.`)
+  }
+}
+
+const amarok = carMaker({name: "Amarok", color: "preta"}, volkswagenProto)
+const jetta = carMaker({name: "Jetta", color: "prata"}, volkswagenProto)
+const corolla = carMaker({name: "Corolla", color: "preta"}, toyotaProto)
+
+// console.log(amarok, jetta,corolla)
+
+// amarok.logCarInfo()
+// jetta.logCarInfo()
+// corolla.logCarInfo()
 
 /*
   04
@@ -91,18 +131,18 @@ const volkswagenProto = {
 const aString =
   "O Curso de JavaScript Roger Melo funciona com turmas fechadas, abertas poucas vezes e é focado em quem ainda não é fluente em JS. Ou seja, quem não consegue construir aplicações web com JavaScript puro."
 
-// console.log(getIndexesOfCharacter(aString, 'b'))
+const getIndexesOfCharacter = (aString, character) =>
+  [...aString].reduce((acc, item, index) => (item.toLowerCase() === character.toLowerCase() ? [...acc, index] : acc), [])
+
+// console.log(getIndexesOfCharacter(aString, "o"))
 
 /*
   05
-
   - Descomente a div com a class "intro", no index.html;
   - O desafio neste exercício é implementar um "efeito digitação", como o deste
-    exemplo: https://youtu.be/_bVIHj3uX6k;
-
+    exemplo: https://vimeo.com/752356051/e402d40a7b
   Abaixo tem o passo a passo de uma das formas de fazer. Siga-o, caso tenha
   dificuldades.
-
   - Declare um array "messages". Cada item desse array é uma string que será 
     "digitada" na tela. Exemplos: 'sou fluente em JS', 'construo aplicações web
     com JS puro';
@@ -136,26 +176,29 @@ const aString =
       ela já tem + 1 e faça characterIndex receber 0.
 */
 
+
+
 /*
   06
-
   - Converta o array "wrongDataFormat" para o objeto do comentário abaixo.
 */
 
 const wrongDataFormat = [
-  "preto-PP",
-  "preto-M",
-  "preto-G",
-  "preto-GG",
-  "preto-GG",
-  "branco-PP",
-  "branco-G",
-  "vermelho-M",
-  "azul-XG",
-  "azul-XG",
-  "azul-XG",
-  "azul-P"
+  'preto-PP',
+  'preto-M',
+  'preto-G',
+  'preto-GG',
+  'preto-GG',
+  'branco-PP',
+  'branco-G',
+  'vermelho-M',
+  'azul-XG',
+  'azul-XG',
+  'azul-XG',
+  'azul-P'
 ]
+
+
 
 /*
   {

@@ -1,5 +1,13 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js"
-import {getFirestore, collection, getDocs} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  doc,
+  deleteDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js"
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOYZw8IuQNCpIEhqCFoyG61cP_O6YVdGI",
@@ -12,23 +20,46 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+const collectionGames = collection(db, "games")
 
-getDocs(collection(db, "games"))
-  .then((result) => {
-    const gameLis = result.docs.reduce((acc, doc) => {
-      const {title, developedBy, createdAt} = doc.data()
-      acc += `<li class="my-4">
-      <h5>${title}</h5>
-      
-      <ul>
-        <li>Desenvolvido por ${developedBy}</li>
-        <li>Adicionado no banco em ${createdAt.toDate()}</li>
-      </ul>
-    </li>`
-      return acc
-    }, "")
-    const gameList = document.querySelector('[data-js="game-list"]')
+const formAddGame = document.querySelector('[data-js="add-game-form"]')
+const gameList = document.querySelector('[data-js="game-list"]')
 
-    gameList.innerHTML = gameLis
+onSnapshot(collectionGames, (querySnapshot) => {
+  const gameLis = querySnapshot.docs.reduce((acc, doc) => {
+    const {title, developedBy} = doc.data()
+    acc += `<li data-id="${doc.id}" class="my-4">
+    <h5>${title}</h5>
+    
+    <ul>
+      <li>Desenvolvido por ${developedBy}</li>
+      <li>Adicionado no banco em </li>
+    </ul>
+    <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
+  </li>`
+    return acc
+  }, "")
+
+  gameList.innerHTML = gameLis
+})
+
+formAddGame.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  addDoc(collectionGames, {
+    title: e.target.title.value,
+    developedBy: e.target.developer.value,
+    createdAt: serverTimestamp()
   })
-  .catch((err) => console.log(err))
+    .then((doc) => console.log(" Documento criado com o ID  ", doc.id))
+    .catch(console.log)
+})
+
+gameList.addEventListener("click", (e) => {
+  const idRemoveButton = e.target.dataset.remove
+  if (idRemoveButton) {
+    deleteDoc(doc(db, "games", idRemoveButton))
+      .then(() => console.log("Game removido"))
+      .catch(console.log)
+  }
+})

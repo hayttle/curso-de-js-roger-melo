@@ -26,21 +26,24 @@ const formAddGame = document.querySelector('[data-js="add-game-form"]')
 const gameList = document.querySelector('[data-js="game-list"]')
 
 onSnapshot(collectionGames, (querySnapshot) => {
-  const gameLis = querySnapshot.docs.reduce((acc, doc) => {
-    const {title, developedBy} = doc.data()
-    acc += `<li data-id="${doc.id}" class="my-4">
-    <h5>${title}</h5>
-    
-    <ul>
-      <li>Desenvolvido por ${developedBy}</li>
-      <li>Adicionado no banco em </li>
-    </ul>
-    <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
-  </li>`
-    return acc
-  }, "")
+  if (!querySnapshot.metadata.hasPendingWrites) {
+    const gameLis = querySnapshot.docs.reduce((acc, doc) => {
+      const {title, developedBy, createdAt} = doc.data()
+      acc += `<li data-id="${doc.id}" class="my-4">
+      <h5>${title}</h5>
+      
+      <ul>
+        <li>Desenvolvido por ${developedBy}</li>
+        <li>Adicionado no banco em ${createdAt.toDate()}</li>
+      </ul>
+      <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
+    </li>`
+      return acc
+    }, "")
 
-  gameList.innerHTML = gameLis
+    gameList.innerHTML = gameLis
+    
+  }
 })
 
 formAddGame.addEventListener("submit", (e) => {

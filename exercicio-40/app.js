@@ -26,7 +26,7 @@ const propToRemove = "b"
 
 const removeProp = (propToRemove, objs) => objs.map(({[propToRemove]: _, ...obj}) => obj)
 
-log(removeProp(propToRemove, objs))
+// log(removeProp(propToRemove, objs))
 
 /*
 [
@@ -62,7 +62,13 @@ const orders = [
   {username: "_rick", status: "shipped", price: 73.65}
 ]
 
-// getStatusCount(orders)
+// const getStatusCount = (orders) => {
+//   return orders.reduce((acc,order)=>{
+//     return acc[order.status] += acc[order.status] || {}
+//   },{})
+// }
+
+// log(getStatusCount(orders))
 
 /*
 {

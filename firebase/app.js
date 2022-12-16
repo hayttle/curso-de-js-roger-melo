@@ -18,6 +18,8 @@ const firebaseConfig = {
   appId: "1:183822428230:web:e4261879236031032bc247"
 }
 
+const log = (...data) => console.log(...data)
+
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 const collectionGames = collection(db, "games")
@@ -25,44 +27,56 @@ const collectionGames = collection(db, "games")
 const formAddGame = document.querySelector('[data-js="add-game-form"]')
 const gameList = document.querySelector('[data-js="game-list"]')
 
-onSnapshot(collectionGames, (querySnapshot) => {
+const formatDate = (createdAt) =>
+  new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short"
+  }).format(createdAt.toDate())
+
+const renderGames = (querySnapshot) => {
   if (!querySnapshot.metadata.hasPendingWrites) {
-    const gameLis = querySnapshot.docs.reduce((acc, doc) => {
+    gameList.innerHTML = querySnapshot.docs.reduce((acc, doc) => {
       const {title, developedBy, createdAt} = doc.data()
-      acc += `<li data-id="${doc.id}" class="my-4">
-      <h5>${title}</h5>
-      
-      <ul>
-        <li>Desenvolvido por ${developedBy}</li>
-        <li>Adicionado no banco em ${createdAt.toDate()}</li>
-      </ul>
-      <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
-    </li>`
+
+      return `${acc}<li data-id="${doc.id}" class="my-4">
+                <h5>${title}</h5>
+                
+                <ul>
+                  <li>Desenvolvido por ${developedBy}</li>
+                  <li>Adicionado no banco em ${formatDate(createdAt)}</li>
+                </ul>
+                <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
+              </li>`
       return acc
     }, "")
-
-    gameList.innerHTML = gameLis
-    
   }
-})
+}
 
-formAddGame.addEventListener("submit", (e) => {
+const createGame = (e) => {
   e.preventDefault()
-
   addDoc(collectionGames, {
     title: e.target.title.value,
     developedBy: e.target.developer.value,
     createdAt: serverTimestamp()
   })
-    .then((doc) => console.log(" Documento criado com o ID  ", doc.id))
-    .catch(console.log)
-})
+    .then((doc) => {
+      log("Documento criado com o ID  ", doc.id)
+      log(e.target)
+      e.target.reset()
+      e.target.title.focus()
+    })
+    .catch(log)
+}
 
-gameList.addEventListener("click", (e) => {
+const deleteGame = (e) => {
   const idRemoveButton = e.target.dataset.remove
   if (idRemoveButton) {
     deleteDoc(doc(db, "games", idRemoveButton))
-      .then(() => console.log("Game removido"))
-      .catch(console.log)
+      .then(() => log("Game removido"))
+      .catch(log)
   }
-})
+}
+
+onSnapshot(collectionGames, renderGames)
+formAddGame.addEventListener("submit", createGame)
+gameList.addEventListener("click", deleteGame)

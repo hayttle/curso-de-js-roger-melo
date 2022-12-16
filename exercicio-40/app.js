@@ -62,13 +62,16 @@ const orders = [
   {username: "_rick", status: "shipped", price: 73.65}
 ]
 
-// const getStatusCount = (orders) => {
-//   return orders.reduce((acc,order)=>{
-//     return acc[order.status] += acc[order.status] || {}
-//   },{})
-// }
+const getStatusCount = (orders) =>
+  orders.reduce(
+    (acc, {status}) => ({
+      ...acc,
+      [status]: (acc[status] || 0) + 1
+    }),
+    {}
+  )
 
-// log(getStatusCount(orders))
+log(getStatusCount(orders))
 
 /*
 {

@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: "1:183822428230:web:e4261879236031032bc247"
 }
 
-const log = (...data) => console.log(...data)
+const log = (data) => console.log(data)
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
@@ -36,47 +36,55 @@ const formatDate = (createdAt) =>
 const renderGames = (querySnapshot) => {
   if (!querySnapshot.metadata.hasPendingWrites) {
     gameList.innerHTML = querySnapshot.docs.reduce((acc, doc) => {
-      const {title, developedBy, createdAt} = doc.data()
+      const [id, {title, developedBy, createdAt}] = [doc.id, doc.data()]
 
-      return `${acc}<li data-id="${doc.id}" class="my-4">
+      return `${acc}<li data-id="${id}" class="my-4">
                 <h5>${title}</h5>
                 
                 <ul>
                   <li>Desenvolvido por ${developedBy}</li>
                   <li>Adicionado no banco em ${formatDate(createdAt)}</li>
                 </ul>
-                <button data-remove="${doc.id}" class="btn btn-danger btn-sm">Remover</button>
+                <button data-remove="${id}" class="btn btn-danger btn-sm">Remover</button>
               </li>`
       return acc
     }, "")
   }
 }
 
-const createGame = (e) => {
+const createGame = async (e) => {
   e.preventDefault()
-  addDoc(collectionGames, {
-    title: e.target.title.value,
-    developedBy: e.target.developer.value,
-    createdAt: serverTimestamp()
-  })
-    .then((doc) => {
-      log("Documento criado com o ID  ", doc.id)
-      log(e.target)
-      e.target.reset()
-      e.target.title.focus()
+  try {
+    const {id} = await addDoc(collectionGames, {
+      title: e.target.title.value,
+      developedBy: e.target.developer.value,
+      createdAt: serverTimestamp()
     })
-    .catch(log)
-}
-
-const deleteGame = (e) => {
-  const idRemoveButton = e.target.dataset.remove
-  if (idRemoveButton) {
-    deleteDoc(doc(db, "games", idRemoveButton))
-      .then(() => log("Game removido"))
-      .catch(log)
+    log("Documento criado com o ID  ", id)
+    e.target.reset()
+    e.target.title.focus()
+  } catch (e) {
+    log(e)
   }
 }
 
-onSnapshot(collectionGames, renderGames)
+const deleteGame = async (e) => {
+  const idRemoveButton = e.target.dataset.remove
+
+  if (!idRemoveButton) {
+    return
+  }
+
+  try {
+    await deleteDoc(doc(db, "games", idRemoveButton))
+    log("Game removido")
+  } catch (e) {
+    log(e)
+  }
+}
+
+const handleSnapshotError = (e) => log(e)
+
+onSnapshot(collectionGames, renderGames, handleSnapshotError)
 formAddGame.addEventListener("submit", createGame)
 gameList.addEventListener("click", deleteGame)

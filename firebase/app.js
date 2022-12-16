@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: "1:183822428230:web:e4261879236031032bc247"
 }
 
-const log = (data) => console.log(data)
+const log = (...data) => console.log(...data)
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
@@ -35,6 +35,14 @@ const formatDate = (createdAt) =>
 
 const renderGames = (querySnapshot) => {
   if (!querySnapshot.metadata.hasPendingWrites) {
+    querySnapshot.docChanges().forEach(({type}) => {
+      if (type === "removed") {
+        log("Game removido")
+      }
+      if (type === "modified" || type === "added") {
+        log("Game adicionado")
+      }
+    })
     gameList.innerHTML = querySnapshot.docs.reduce((acc, doc) => {
       const [id, {title, developedBy, createdAt}] = [doc.id, doc.data()]
 
@@ -77,7 +85,7 @@ const deleteGame = async (e) => {
 
   try {
     await deleteDoc(doc(db, "games", idRemoveButton))
-    log("Game removido")
+    // log("Game removido")
   } catch (e) {
     log(e)
   }

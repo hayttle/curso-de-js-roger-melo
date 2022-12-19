@@ -22,46 +22,84 @@ const app = initializeApp(firebaseConfig)
 const provider = new GoogleAuthProvider()
 const auth = getAuth()
 
-const linkLogin = document.querySelector('[data-js="login-link"]')
+const loginLink = document.querySelector('[data-js="login-link"]')
 const buttonLoginGoogle = document.querySelector('[data-js="button-form"]')
-const linkLogout = document.querySelector('[data-js="logout"]')
-const modal = document.querySelector('[data-js="modal-login"]')
-const linksLogged = document.querySelectorAll('[data-js="logged-in"]')
+const logoutLink = document.querySelector('[data-js="logout"]')
+const modalAuthGoogle = document.querySelector('[data-js="modal-login"]')
+const modalAddPhrase = document.querySelector("#modal-add-phrase")
+const loggedLinks = document.querySelectorAll('[data-js="logged-in"]')
 const h6 = document.querySelector('[data-js="title-add-phases"]')
 const phrasesList = document.querySelector('[data-js="phrases-list"]')
+const addPhraseLink = document.querySelector('[data-js="add-phrase-link"]')
+const formAddPhrase = document.querySelector('[data-js="add-phrase-form"]')
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // const {displayName, email, uid} = user
 
-    M.Modal.init(modal).close()
-    linksLogged.forEach((link) => {
+    M.Modal.init(modalAuthGoogle).close()
+    loggedLinks.forEach((link) => {
       link.classList.remove("hide")
     })
 
-    linkLogin.classList.add("hide")
+    loginLink.classList.add("hide")
     h6.classList.add("hide")
     phrasesList.classList.remove("hide")
   }
 })
 
-linkLogin.addEventListener("click", () => {
-  M.Modal.init(modal)
+loginLink.addEventListener("click", () => {
+  M.Modal.init(modaAuthGooglel)
 })
 
-linkLogout.addEventListener("click", () => {
+logoutLink.addEventListener("click", () => {
   signOut(auth)
     .then(() => {
       console.log("Usuário deslogado com sucesso!")
 
-      linksLogged.forEach((link) => {
+      loggedLinks.forEach((link) => {
         link.classList.add("hide")
       })
-      linkLogin.classList.remove("hide")
+      loginLink.classList.remove("hide")
       h6.classList.remove("hide")
       phrasesList.classList.add("hide")
     })
     .catch((error) => console.log(error))
+})
+
+addPhraseLink.addEventListener("click", () => {
+  M.Modal.init(modalAddPhrase)
+})
+
+formAddPhrase.addEventListener("submit", (e) => {
+  e.preventDefault()
+  const title = e.target.title.value
+  const phrase = e.target.phrase.value
+
+  const li = document.createElement("li")
+
+  const i = document.createElement("i")
+  i.setAttribute("class", "material-icons")
+  i.textContent = "movie"
+
+  const span = document.createElement("span")
+  span.textContent = "Frase do filme"
+
+  const divHeader = document.createElement("div")
+  divHeader.setAttribute("class", "collapsible-header blue-grey darken-4 white-text")
+  divHeader.appendChild(i)
+  divHeader.innerHTML += "Título do filme"
+
+  const divBody = document.createElement("div")
+  divBody.setAttribute("class", "collapsible-body white-text")
+  divBody.append(span)
+
+  li.append(divHeader)
+  li.append(divBody)
+
+  phrasesList.append(li)
+
+  M.Modal.init(modalAddPhrase).close()
 })
 
 buttonLoginGoogle.addEventListener("click", () => {

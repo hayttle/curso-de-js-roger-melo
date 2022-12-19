@@ -33,61 +33,39 @@ const formatDate = (createdAt) =>
     timeStyle: "short"
   }).format(createdAt.toDate())
 
-const sanitize = (string) => DOMPurify.sanitize(string)
-
 const renderGames = (querySnapshot) => {
-  if (querySnapshot.metadata.hasPendingWrites) {
-    return
+  if (!querySnapshot.metadata.hasPendingWrites) {
+    querySnapshot.docChanges().forEach(({type}) => {
+      if (type === "removed") {
+        log("Game removido")
+      }
+      if (type === "modified" || type === "added") {
+        log("Game adicionado")
+      }
+    })
+    gameList.innerHTML = querySnapshot.docs.reduce((acc, doc) => {
+      const [id, {title, developedBy, createdAt}] = [doc.id, doc.data()]
+
+      return `${acc}<li data-id="${id}" class="my-4">
+                <h5>${title}</h5>
+                
+                <ul>
+                  <li>Desenvolvido por ${developedBy}</li>
+                  <li>Adicionado no banco em ${formatDate(createdAt)}</li>
+                </ul>
+                <button data-remove="${id}" class="btn btn-danger btn-sm">Remover</button>
+              </li>`
+      return acc
+    }, "")
   }
-  querySnapshot.docChanges().forEach(({type}) => {
-    if (type === "removed") {
-      log("Game removido")
-    }
-    
-    if (type === "modified" || type === "added") {
-      const games = querySnapshot.docs.map((doc) => {
-        const [id, {title, developedBy, createdAt}] = [doc.id, doc.data()]
-
-        const liGame = document.createElement("li")
-        liGame.setAttribute("data-id", id)
-        liGame.setAttribute("class", "my-4")
-
-        const h5 = document.createElement("h5")
-        h5.textContent = sanitize(title)
-
-        const liDevelopedBy = document.createElement("li")
-        liDevelopedBy.textContent = `Desenvolvido por ${sanitize(developedBy)}`
-
-        const liDate = document.createElement("li")
-        liDate.textContent = `Adicionado no banco em ${formatDate(createdAt)}`
-
-        const ul = document.createElement("ul")
-        ul.append(liDevelopedBy)
-        ul.append(liDate)
-
-        const button = document.createElement("button")
-        button.setAttribute("data-remove", id)
-        button.setAttribute("class", "btn btn-danger btn-sm")
-        button.textContent = "Remover"
-
-        liGame.append(h5)
-        liGame.append(ul)
-        liGame.append(button)
-
-        return liGame
-      }, "")
-      games.forEach((game) => gameList.append(game))
-    }
-  })
-
 }
 
 const createGame = async (e) => {
   e.preventDefault()
   try {
     const {id} = await addDoc(collectionGames, {
-      title: sanitize(e.target.title.value),
-      developedBy: sanitize(e.target.developer.value),
+      title: e.target.title.value,
+      developedBy: e.target.developer.value,
       createdAt: serverTimestamp()
     })
     log("Documento criado com o ID  ", id)
@@ -115,6 +93,6 @@ const deleteGame = async (e) => {
 
 const handleSnapshotError = (e) => log(e)
 
-onSnapshot(collectionGames, renderGames, handleSnapshotError)
+onSnapshot(collectionGames, renderGamesList, handleSnapshotError)
 formAddGame.addEventListener("submit", createGame)
 gameList.addEventListener("click", deleteGame)

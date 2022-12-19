@@ -33,39 +33,61 @@ const formatDate = (createdAt) =>
     timeStyle: "short"
   }).format(createdAt.toDate())
 
-const renderGames = (querySnapshot) => {
-  if (!querySnapshot.metadata.hasPendingWrites) {
-    querySnapshot.docChanges().forEach(({type}) => {
-      if (type === "removed") {
-        log("Game removido")
-      }
-      if (type === "modified" || type === "added") {
-        log("Game adicionado")
-      }
-    })
-    gameList.innerHTML = querySnapshot.docs.reduce((acc, doc) => {
-      const [id, {title, developedBy, createdAt}] = [doc.id, doc.data()]
+const sanitize = (string) => DOMPurify.sanitize(string)
 
-      return `${acc}<li data-id="${id}" class="my-4">
-                <h5>${title}</h5>
-                
-                <ul>
-                  <li>Desenvolvido por ${developedBy}</li>
-                  <li>Adicionado no banco em ${formatDate(createdAt)}</li>
-                </ul>
-                <button data-remove="${id}" class="btn btn-danger btn-sm">Remover</button>
-              </li>`
-      return acc
-    }, "")
+const renderGame = (docChange) => {
+  const [id, {title, developedBy, createdAt}] = [docChange.doc.id, docChange.doc.data()]
+
+  const liGame = document.createElement("li")
+  liGame.setAttribute("data-id", id)
+  liGame.setAttribute("class", "my-4")
+
+  const h5 = document.createElement("h5")
+  h5.textContent = sanitize(title)
+
+  const liDevelopedBy = document.createElement("li")
+  liDevelopedBy.textContent = `Desenvolvido por ${sanitize(developedBy)}`
+
+  const liDate = document.createElement("li")
+  liDate.textContent = `Adicionado no banco em ${formatDate(createdAt)}`
+
+  const ul = document.createElement("ul")
+  ul.append(liDevelopedBy)
+  ul.append(liDate)
+
+  const button = document.createElement("button")
+  button.setAttribute("data-remove", id)
+  button.setAttribute("class", "btn btn-danger btn-sm")
+  button.textContent = "Remover"
+
+  liGame.append(h5)
+  liGame.append(ul)
+  liGame.append(button)
+  gameList.append(liGame)
+}
+
+const renderGamesList = (querySnapshot) => {
+  if (querySnapshot.metadata.hasPendingWrites) {
+    return
   }
+
+  querySnapshot.docChanges().forEach((docChange) => {
+    if (docChange.type === "removed") {
+      const liGame = document.querySelector(`[data-id="${docChange.doc.id}"]`)
+      liGame.remove()
+      log("Game removido")
+      return
+    }
+    renderGame(docChange)
+  })
 }
 
 const createGame = async (e) => {
   e.preventDefault()
   try {
     const {id} = await addDoc(collectionGames, {
-      title: e.target.title.value,
-      developedBy: e.target.developer.value,
+      title: sanitize(e.target.title.value),
+      developedBy: sanitize(e.target.developer.value),
       createdAt: serverTimestamp()
     })
     log("Documento criado com o ID  ", id)
